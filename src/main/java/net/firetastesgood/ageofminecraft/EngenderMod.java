@@ -27,6 +27,8 @@ public class EngenderMod
     {
         IEventBus modEventBus = context.getModEventBus();
 
+        net.firetastesgood.ageofminecraft.registry.ModEntityTypes.ENTITIES.register(modEventBus);
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
