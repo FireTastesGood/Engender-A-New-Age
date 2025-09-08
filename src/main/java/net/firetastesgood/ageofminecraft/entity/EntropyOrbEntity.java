@@ -1,31 +1,62 @@
 package net.firetastesgood.ageofminecraft.entity;
 
 import net.firetastesgood.ageofminecraft.registry.ModEntityTypes;
+import net.firetastesgood.ageofminecraft.util.CrystalHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
-import java.util.List;
-
 public class EntropyOrbEntity extends Entity {
 
-    // Merge tuning (closer to vanilla feel)
-    private static final int MERGE_DELAY_TICKS = 70;    // ~2s before any merging is allowed
-    private static final int MERGE_INTERVAL_TICKS = 20; // check for a merge once per second
-    private static final double MERGE_RADIUS = 0.25D;   // very small radius so only truly touching orbs merge
+    // --- merge tuning (XP-like but gentle) ---
+    private static final int MERGE_DELAY_TICKS = 70;    // ~3.5s @20tps before merging
+    private static final int MERGE_INTERVAL_TICKS = 20; // check once per second
+    private static final double MERGE_RADIUS = 0.25D;   // only truly touching orbs merge
 
+    // --- synced value (amount contained) ---
     private static final EntityDataAccessor<Integer> DATA_VALUE =
             SynchedEntityData.defineId(EntropyOrbEntity.class, EntityDataSerializers.INT);
 
+    public int getValue() {
+        return this.entityData.get(DATA_VALUE);
+    }
+
+    public void setValue(int v) {
+        this.entityData.set(DATA_VALUE, Math.max(0, v));
+    }
+
+    // --- constructors ---
+    public EntropyOrbEntity(EntityType<? extends EntropyOrbEntity> type, Level level) {
+        super(type, level);
+        this.setNoGravity(false);
+    }
+
+    public EntropyOrbEntity(Level level, double x, double y, double z, int value) {
+        this(ModEntityTypes.ENTROPY_ORB.get(), level);
+        this.setPos(x, y, z);
+        this.setValue(value);
+    }
+
+    // --- synched data wiring ---
+    @Override
+    protected void defineSynchedData() {
+        this.entityData.define(DATA_VALUE, 0);
+    }
+
+    // --- size helper (renderer can read) ---
     public int getOrbSizeIndex() {
         int val = this.getValue();
         if (val >= 2477) return 10;
@@ -40,62 +71,63 @@ public class EntropyOrbEntity extends Entity {
         return val >= 3 ? 1 : 0;
     }
 
-    public EntropyOrbEntity(EntityType<? extends EntropyOrbEntity> type, Level level) {
-        super(type, level);
-        this.setNoGravity(false);
-    }
-
-    public EntropyOrbEntity(Level level, double x, double y, double z, int value) {
-        this(ModEntityTypes.ENTROPY_ORB.get(), level);
-        this.setPos(x, y, z);
-        this.setValue(value);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_VALUE, 0);
-    }
-
-    public int getValue() {
-        return this.entityData.get(DATA_VALUE);
-    }
-
-    public void setValue(int v) {
-        this.entityData.set(DATA_VALUE, v);
-    }
-
+    // --- lifecycle / behavior ---
     @Override
     public void tick() {
         super.tick();
 
-        // --- simple motion on BOTH sides (smooth visuals) ---
+        // Smooth motion on BOTH sides (prevents 15fps look)
         if (!this.isNoGravity()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
         }
 
-        net.minecraft.world.phys.Vec3 motion = this.getDeltaMovement();
-        this.move(net.minecraft.world.entity.MoverType.SELF, motion);
+        Vec3 motion = this.getDeltaMovement();
+        this.move(MoverType.SELF, motion);
 
         final double airDrag = 0.98D;
         if (this.onGround()) {
-            // no bounce on ground: zero Y, damp X/Z
-            float blockFriction = this.level().getBlockState(this.blockPosition().below())
-                    .getFriction(this.level(), this.blockPosition().below(), this);
-            double friction = blockFriction * 0.91D;
+            // no visible bounce; damp X/Z, zero Y
+            double friction = this.level().getBlockState(this.blockPosition().below())
+                    .getFriction(this.level(), this.blockPosition().below(), this) * 0.91D;
             this.setDeltaMovement(motion.x * friction, 0.0D, motion.z * friction);
         } else {
             this.setDeltaMovement(motion.multiply(airDrag, 0.98D, airDrag));
         }
 
-        // --- server-only logic (authoritative) ---
         if (!level().isClientSide) {
+            // homing ONLY if player has an entropy receiver with capacity
+            tryHomeToEligiblePlayer();
+
+            // gentle merge after a delay, and not too often
             if (this.tickCount >= MERGE_DELAY_TICKS && (this.tickCount % MERGE_INTERVAL_TICKS) == 0) {
                 mergeNearby(MERGE_RADIUS);
             }
+
+            // despawn ~5 minutes
             if (this.tickCount >= 6000) {
                 this.discard();
             }
         }
+    }
+
+    private void tryHomeToEligiblePlayer() {
+        Player p = this.level().getNearestPlayer(this, 24.0D);
+        if (p == null) return;
+
+        if (CrystalHelper.findEntropyReceiverSlot(p) < 0) return; // no capacity -> no homing
+
+        Vec3 to = new Vec3(
+                p.getX() - this.getX(),
+                (p.getY() + (double)p.getEyeHeight()) - this.getY(),
+                p.getZ() - this.getZ()
+        );
+        double dist = to.length();
+        if (dist < 1.0e-4D) return;
+
+        double accel = 0.03D;
+        double scale = 1.0D - Math.min(1.0D, dist / 8.0D);
+        scale *= scale; // ease-in
+        this.setDeltaMovement(this.getDeltaMovement().add(to.normalize().scale(accel * scale)));
     }
 
     private void mergeNearby(double radius) {
@@ -112,9 +144,9 @@ public class EntropyOrbEntity extends Entity {
                 candidate = other;
             }
         }
-
         if (candidate == null) return;
 
+        // merge into the older orb (preserve natural despawn timing)
         EntropyOrbEntity keep   = (this.tickCount <= candidate.tickCount) ? this : candidate;
         EntropyOrbEntity remove = (keep == this) ? candidate : this;
 
@@ -124,6 +156,29 @@ public class EntropyOrbEntity extends Entity {
         if (!remove.isRemoved()) remove.discard();
     }
 
+    // --- deposit to crystals on touch ---
+    @Override
+    public void playerTouch(Player player) {
+        if (this.level().isClientSide) return;
+        if (this.isRemoved() || this.getValue() <= 0) return;
+
+        int slot = CrystalHelper.findEntropyReceiverSlot(player);
+        if (slot < 0) return;
+
+        ItemStack receiver = player.getInventory().getItem(slot);
+        int accepted = CrystalHelper.depositEntropy(receiver, this.getValue());
+        if (accepted > 0) {
+            this.setValue(this.getValue() - accepted);
+
+            // entropy pickup sound (end portal frame fill, pitch ~2.0)
+            this.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 2.0F);
+
+            if (this.getValue() <= 0) this.discard();
+        }
+    }
+
+    // --- persistence & networking ---
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         this.setValue(tag.getInt("Value"));

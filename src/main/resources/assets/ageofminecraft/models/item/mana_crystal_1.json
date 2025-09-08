@@ -1,0 +1,9 @@
+{
+  "parent": "item/generated",
+  "textures": { "layer0": "ageofminecraft:item/mana_crystal_empty" },
+  "overrides": [
+    { "predicate": { "ageofminecraft:fill_state": 1 }, "model": "ageofminecraft:item/mana_crystal_midlow" },
+    { "predicate": { "ageofminecraft:fill_state": 2 }, "model": "ageofminecraft:item/mana_crystal_midhigh" },
+    { "predicate": { "ageofminecraft:fill_state": 3 }, "model": "ageofminecraft:item/mana_crystal_full" }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "item.ageofminecraft.mana_crystal_1": "Mana Crystal I",
+  "item.ageofminecraft.mana_crystal_2": "Mana Crystal II",
+  "item.ageofminecraft.mana_crystal_3": "Mana Crystal III",
+  "item.ageofminecraft.mana_crystal_4": "Mana Crystal IV",
+  "item.ageofminecraft.mana_crystal_5": "Mana Crystal V",
+  "item.ageofminecraft.mana_crystal_6": "Mana Crystal VI",
+  "item.ageofminecraft.mana_crystal_7": "Mana Crystal VII",
+  "item.ageofminecraft.mana_crystal_8": "Mana Crystal VIII",
+  "item.ageofminecraft.mana_crystal_9": "Mana Crystal IX",
+  "item.ageofminecraft.mana_crystal_10": "Mana Crystal X",
+
+  "item.ageofminecraft.entropy_crystal_1": "Entropy Crystal I",
+  "item.ageofminecraft.entropy_crystal_2": "Entropy Crystal II",
+  "item.ageofminecraft.entropy_crystal_3": "Entropy Crystal III",
+  "item.ageofminecraft.entropy_crystal_4": "Entropy Crystal IV",
+  "item.ageofminecraft.entropy_crystal_5": "Entropy Crystal V",
+  "item.ageofminecraft.entropy_crystal_6": "Entropy Crystal VI",
+  "item.ageofminecraft.entropy_crystal_7": "Entropy Crystal VII",
+  "item.ageofminecraft.entropy_crystal_8": "Entropy Crystal VIII",
+  "item.ageofminecraft.entropy_crystal_9": "Entropy Crystal IX",
+  "item.ageofminecraft.entropy_crystal_10": "Entropy Crystal X",
+
+  "item.ageofminecraft.infinite_wellspring": "Infinite Wellspring",
+
+  "item.ageofminecraft.crystal.mana.desc": "Allows you to collect Mana, then funnel it into the Fusion Crafter to make mobs.",
+  "item.ageofminecraft.crystal.entropy.desc": "Allows you to collect Entropy, then funnel it into the Fusion Crafter to make mobs.",
+  "item.ageofminecraft.wellspring.desc": "Allows you to collect INFINITE Mana and Entropy, then funnel it into the Fusion Crafter to make mobs."
+}

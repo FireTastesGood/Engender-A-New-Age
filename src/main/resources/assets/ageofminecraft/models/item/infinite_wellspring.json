@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "ageofminecraft:item/wellspring_0" },
+  "overrides": [
+    { "predicate": { "ageofminecraft:fill_state": 0.25 }, "model": "ageofminecraft:item/wellspring_1" },
+    { "predicate": { "ageofminecraft:fill_state": 0.50 }, "model": "ageofminecraft:item/wellspring_2" },
+    { "predicate": { "ageofminecraft:fill_state": 0.75 }, "model": "ageofminecraft:item/wellspring_3" }
+  ]
+}

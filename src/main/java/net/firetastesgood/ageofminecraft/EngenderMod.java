@@ -1,6 +1,8 @@
 package net.firetastesgood.ageofminecraft;
 
 import com.mojang.logging.LogUtils;
+import net.firetastesgood.ageofminecraft.registry.ModCreativeTabs;
+import net.firetastesgood.ageofminecraft.registry.ModItems;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -23,23 +25,23 @@ public class EngenderMod
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public EngenderMod(FMLJavaModLoadingContext context)
-    {
+    public EngenderMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 
-        net.firetastesgood.ageofminecraft.registry.ModEntityTypes.ENTITIES.register(modEventBus);
-
-        // Register the commonSetup method for modloading
+        // lifecycle listeners
         modEventBus.addListener(this::commonSetup);
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-
-        // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 
-        // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
+        // register items, entities, creative tabs, etc.
+        net.firetastesgood.ageofminecraft.registry.ModItems.ITEMS.register(modEventBus);
+        net.firetastesgood.ageofminecraft.registry.ModEntityTypes.ENTITIES.register(modEventBus);
+        net.firetastesgood.ageofminecraft.registry.ModCreativeTabs.TABS.register(modEventBus);
+
+        // configs
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+        // forge events
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
