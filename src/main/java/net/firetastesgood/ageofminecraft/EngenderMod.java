@@ -28,19 +28,15 @@ public class EngenderMod
     public EngenderMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 
-        // lifecycle listeners
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::addCreative);
 
-        // register items, entities, creative tabs, etc.
         net.firetastesgood.ageofminecraft.registry.ModItems.ITEMS.register(modEventBus);
         net.firetastesgood.ageofminecraft.registry.ModEntityTypes.ENTITIES.register(modEventBus);
         net.firetastesgood.ageofminecraft.registry.ModCreativeTabs.TABS.register(modEventBus);
 
-        // configs
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
-        // forge events
         MinecraftForge.EVENT_BUS.register(this);
     }
 

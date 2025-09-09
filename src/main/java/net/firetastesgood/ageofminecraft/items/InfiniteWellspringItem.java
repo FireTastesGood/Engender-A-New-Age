@@ -24,12 +24,10 @@ public class InfiniteWellspringItem extends Item {
 
     @Override public boolean isFoil(ItemStack stack) { return true; }
 
-    // Golden rarity
     @Override public Rarity getRarity(ItemStack stack) { return CrystalHelper.ARTIFACT_RARITY; }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tip, TooltipFlag flags) {
-        tip.add(Component.literal("(ARTIFACT)").withStyle(ChatFormatting.GOLD));
         tip.add(Component.translatable("item.ageofminecraft.infinite_wellspring.desc").withStyle(ChatFormatting.GRAY));
 
         int m = getMana(stack);

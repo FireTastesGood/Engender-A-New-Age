@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ManaCrystalItem extends Item {
-    private final int tier; // 1..10
+    private final int tier;
 
     public ManaCrystalItem(int tier, Properties props) {
         super(props);
@@ -22,7 +22,6 @@ public class ManaCrystalItem extends Item {
 
     public int getTier() { return tier; }
 
-    // Current & max (tier table mirrors your old ItemManaCollector)
     public int getCurrent(ItemStack stack) {
         return stack.getOrCreateTag().getInt("mana");
     }
@@ -38,7 +37,7 @@ public class ManaCrystalItem extends Item {
         stack.getOrCreateTag().putInt("mana", next);
     }
 
-    @Override public boolean isFoil(ItemStack stack) { return true; } // always glint
+    @Override public boolean isFoil(ItemStack stack) { return true; }
 
     @Override
     public Rarity getRarity(ItemStack stack) { return Rarity.EPIC; }

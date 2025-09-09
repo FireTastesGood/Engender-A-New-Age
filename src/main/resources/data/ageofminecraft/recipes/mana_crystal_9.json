@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:diamond_block" },
+    "B": { "item": "minecraft:dragon_breath" },
+    "C": { "item": "minecraft:beacon" },
+    "D": { "item": "ageofminecraft:mana_crystal_8" }
+  },
+  "result": { "item": "ageofminecraft:mana_crystal_9", "count": 1 }
+}

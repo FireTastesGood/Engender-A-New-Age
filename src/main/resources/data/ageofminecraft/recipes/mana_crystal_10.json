@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:beacon" },
+    "B": { "item": "minecraft:dragon_head" },
+    "C": { "item": "minecraft:dragon_egg" },
+    "D": { "item": "ageofminecraft:mana_crystal_9" }
+  },
+  "result": { "item": "ageofminecraft:mana_crystal_10", "count": 1 }
+}

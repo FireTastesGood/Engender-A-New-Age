@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:obsidian" },
+    "B": { "item": "minecraft:magma_cream" },
+    "C": { "item": "minecraft:quartz_block" },
+    "D": { "item": "ageofminecraft:mana_crystal_4" }
+  },
+  "result": { "item": "ageofminecraft:mana_crystal_5", "count": 1 }
+}

@@ -10,7 +10,6 @@ import net.minecraft.world.item.Rarity;
 public final class CrystalHelper {
     private CrystalHelper(){}
 
-    // Capacities from your legacy ItemManaCollector (exactly preserved)
     public static int getManaCapacityForTier(int tier) {
         return switch (tier) {
             case 1 -> 1000;
@@ -42,14 +41,10 @@ public final class CrystalHelper {
         };
     }
 
-    // Custom golden rarity like the old UBEREPIC
     public static final Rarity ARTIFACT_RARITY = Rarity.create("ARTIFACT", (c) -> c.withColor(0xFFD700));
-
-    // --- Inventory scanning rules (hotbar -> inventory) ---
 
     /** First mana crystal with space, or wellsprint item (always space). Returns stack index or -1. */
     public static int findManaReceiverSlot(Player player) {
-        // hotbar 0..8, then main 9..35
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack s = player.getInventory().getItem(i);
             if (s.isEmpty()) continue;
@@ -74,7 +69,6 @@ public final class CrystalHelper {
         return -1;
     }
 
-    // Deposit helpers — returns amount actually accepted
     public static int depositMana(ItemStack stack, int amount) {
         if (stack.getItem() instanceof InfiniteWellspringItem ws) {
             ws.addMana(stack, amount);

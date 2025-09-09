@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EntropyCrystalItem extends Item {
-    private final int tier; // 1..10
+    private final int tier;
 
     public EntropyCrystalItem(int tier, Properties props) {
         super(props);

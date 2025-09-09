@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:redstone" },
+    "B": { "item": "minecraft:glowstone_dust" },
+    "C": { "item": "minecraft:ender_pearl" },
+    "D": { "item": "ageofminecraft:mana_crystal_1" }
+  },
+  "result": { "item": "ageofminecraft:entropy_crystal_1", "count": 1 }
+}

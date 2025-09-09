@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:obsidian" },
+    "B": { "item": "minecraft:ender_pearl" },
+    "C": { "item": "minecraft:diamond" },
+    "D": { "item": "ageofminecraft:entropy_crystal_5" }
+  },
+  "result": { "item": "ageofminecraft:entropy_crystal_6", "count": 1 }
+}

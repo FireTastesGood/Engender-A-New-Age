@@ -17,12 +17,13 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = EngenderMod.MODID)
 public class MobDropsHandler {
 
-    // --- orb spread tuning ---
-    private static final double SPREAD_RADIUS   = 1.2D;  // how far from the death point they spawn (was ~0.6)
-    private static final double VERTICAL_LIFT   = 0.35D; // extra Y offset on spawn
-    private static final double BASE_UPWARD_VEL = 0.08D; // initial upward velocity
-    private static final double HORIZ_SPEED     = 0.12D; // outward push strength
-    private static final double JITTER_SPEED    = 0.02D; // small randomness on top
+    private static final int MAX_ORB_VALUE = 64;
+
+    private static final double SPREAD_RADIUS   = 1.2D;
+    private static final double VERTICAL_LIFT   = 0.35D;
+    private static final double BASE_UPWARD_VEL = 0.08D;
+    private static final double HORIZ_SPEED     = 0.12D;
+    private static final double JITTER_SPEED    = 0.02D;
 
     @SubscribeEvent
     public static void onMobDeath(LivingDeathEvent event) {
@@ -44,17 +45,16 @@ public class MobDropsHandler {
         final double x = victim.getX();
         final double y = victim.getY() + victim.getBbHeight() * 0.5;
         final double z = victim.getZ();
-        final RandomSource rng = level.getRandom();    // <-- use Minecraft RNG
+        final RandomSource rng = level.getRandom();
 
-        // MANA
+        // Mana
         int mana = base;
         while (mana > 0) {
-            int split = splitXP(mana);
+            int split = Math.min(MAX_ORB_VALUE, splitXP(mana));
             mana -= split;
 
-            // uniform disk spread around the victim
             double angle  = rng.nextDouble() * Math.PI * 2.0;
-            double radius = Math.sqrt(rng.nextDouble()) * SPREAD_RADIUS; // sqrt => uniform density
+            double radius = Math.sqrt(rng.nextDouble()) * SPREAD_RADIUS;
             double ox = Math.cos(angle) * radius;
             double oz = Math.sin(angle) * radius;
             double oy = rng.nextDouble() * VERTICAL_LIFT;
@@ -68,11 +68,11 @@ public class MobDropsHandler {
             level.addFreshEntity(orb);
         }
 
-        // ENTROPY
+        // Entropy
         if (maxHealth >= 100.0F) {
             int entropy = (int)(maxHealth * 0.10F);
             while (entropy > 0) {
-                int split = splitXP(entropy);
+                int split = Math.min(MAX_ORB_VALUE, splitXP(entropy));
                 entropy -= split;
 
                 double angle  = rng.nextDouble() * Math.PI * 2.0;

@@ -23,7 +23,7 @@ public class EntropyOrbRenderer extends EntityRenderer<EntropyOrbEntity> {
     private static final float PER_TIER_ADD = 0.06f;
 
     private static final float PULSE_SPEED = 6.0f;
-    // red -> darker orange (less bright)
+
     private static final float R0 = 1.00f, G0 = 0.20f, B0 = 0.20f;
     private static final float R1 = 1.00f, G1 = 0.45f, B1 = 0.20f;
 
@@ -37,12 +37,11 @@ public class EntropyOrbRenderer extends EntityRenderer<EntropyOrbEntity> {
     public void render(EntropyOrbEntity orb, float entityYaw, float partialTicks, PoseStack pose, MultiBufferSource buf, int packedLight) {
         pose.pushPose();
 
-        float bob = 0.3F + (float)Math.sin((orb.tickCount + partialTicks) / 2.0F) * 0.025F;
-        pose.translate(0.0D, 0.1F + bob, 0.0D);
+        pose.translate(0.0D, 0.15F, 0.0D);
         pose.mulPose(this.entityRenderDispatcher.cameraOrientation());
         pose.mulPose(Axis.YP.rotationDegrees(180.0F));
 
-        int sizeIndex = orb.getOrbSizeIndex();               // 0..10
+        int sizeIndex = orb.getOrbSizeIndex();
         float scale   = BASE_SCALE + (sizeIndex * PER_TIER_ADD);
         pose.scale(scale, scale, scale);
 

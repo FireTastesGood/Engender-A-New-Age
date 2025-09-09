@@ -4,7 +4,6 @@ import net.firetastesgood.ageofminecraft.EngenderMod;
 import net.firetastesgood.ageofminecraft.items.EntropyCrystalItem;
 import net.firetastesgood.ageofminecraft.items.InfiniteWellspringItem;
 import net.firetastesgood.ageofminecraft.items.ManaCrystalItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -13,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, EngenderMod.MODID);
 
-    // Mana Crystals I..X (IDs numeric; display uses Roman numerals)
+    // Mana Crystals I-X
     public static final RegistryObject<Item> MANA_CRYSTAL_1  = ITEMS.register("mana_crystal_1",  () -> new ManaCrystalItem(1, propsEpic()));
     public static final RegistryObject<Item> MANA_CRYSTAL_2  = ITEMS.register("mana_crystal_2",  () -> new ManaCrystalItem(2, propsEpic()));
     public static final RegistryObject<Item> MANA_CRYSTAL_3  = ITEMS.register("mana_crystal_3",  () -> new ManaCrystalItem(3, propsEpic()));
@@ -25,7 +24,7 @@ public class ModItems {
     public static final RegistryObject<Item> MANA_CRYSTAL_9  = ITEMS.register("mana_crystal_9",  () -> new ManaCrystalItem(9, propsEpic()));
     public static final RegistryObject<Item> MANA_CRYSTAL_10 = ITEMS.register("mana_crystal_10", () -> new ManaCrystalItem(10, propsEpic()));
 
-    // Entropy Crystals I..X
+    // Entropy Crystals I-X
     public static final RegistryObject<Item> ENTROPY_CRYSTAL_1  = ITEMS.register("entropy_crystal_1",  () -> new EntropyCrystalItem(1, propsEpic()));
     public static final RegistryObject<Item> ENTROPY_CRYSTAL_2  = ITEMS.register("entropy_crystal_2",  () -> new EntropyCrystalItem(2, propsEpic()));
     public static final RegistryObject<Item> ENTROPY_CRYSTAL_3  = ITEMS.register("entropy_crystal_3",  () -> new EntropyCrystalItem(3, propsEpic()));
