@@ -1,0 +1,15 @@
+{
+  "type": "witherstormmod:item_craft_super_beacon",
+  "condition": "all_supports",
+  "ingredients": [
+    { "item": "ageofminecraft:mana_crystal_10" },
+    { "item": "minecraft:gold_block" },
+    { "item": "ageofminecraft:entropy_crystal_10" },
+    { "item": "minecraft:gold_block" },
+    { "item": "ageofminecraft:mana_crystal_10" },
+    { "item": "minecraft:gold_block" },
+    { "item": "ageofminecraft:entropy_crystal_10" },
+    { "item": "minecraft:gold_block" }
+  ],
+  "result": { "item": "ageofminecraft:infinite_wellspring" }
+}
