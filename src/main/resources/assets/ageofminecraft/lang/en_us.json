@@ -25,5 +25,7 @@
 
   "item.ageofminecraft.crystal.mana.desc": "Allows you to collect Mana, then funnel it into the Fusion Crafter to make mobs.",
   "item.ageofminecraft.crystal.entropy.desc": "Allows you to collect Entropy, then funnel it into the Fusion Crafter to make mobs.",
-  "item.ageofminecraft.infinite_wellspring.desc": "Allows you to collect INFINITE Mana and Entropy, then funnel it into the Fusion Crafter to make mobs."
+  "item.ageofminecraft.infinite_wellspring.desc": "Allows you to collect INFINITE Mana and Entropy, then funnel it into the Fusion Crafter to make mobs.",
+
+  "block.ageofminecraft.fusion_crafter": "Fusion Crafter"
 }

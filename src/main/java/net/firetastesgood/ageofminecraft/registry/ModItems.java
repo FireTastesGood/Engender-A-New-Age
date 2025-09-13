@@ -43,4 +43,10 @@ public class ModItems {
     private static Item.Properties propsEpic() {
         return new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC);
     }
+
+    public static final RegistryObject<net.minecraft.world.item.Item> FUSION_CRAFTER =
+            ITEMS.register("fusion_crafter",
+                    () -> new net.minecraft.world.item.BlockItem(ModBlocks.FUSION_CRAFTER.get(),
+                            new net.minecraft.world.item.Item.Properties()));
+
 }
