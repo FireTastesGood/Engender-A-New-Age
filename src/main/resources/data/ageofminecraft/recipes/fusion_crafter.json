@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:iron_ingot" },
+    "B": { "item": "minecraft:iron_bars" },
+    "C": { "item": "minecraft:emerald" }
+  },
+  "result": { "item": "ageofminecraft:fusion_crafter", "count": 1 }
+}
