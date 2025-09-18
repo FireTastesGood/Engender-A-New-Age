@@ -1,13 +1,7 @@
 package net.firetastesgood.ageofminecraft;
 
 import com.mojang.logging.LogUtils;
-import net.firetastesgood.ageofminecraft.registry.ModBlocks;
-import net.firetastesgood.ageofminecraft.registry.ModBlockEntities;
-import net.firetastesgood.ageofminecraft.registry.ModCreativeTabs;
-import net.firetastesgood.ageofminecraft.registry.ModEntityTypes;
-import net.firetastesgood.ageofminecraft.registry.ModItems;
-import net.firetastesgood.ageofminecraft.registry.ModMenus;
-import net.firetastesgood.ageofminecraft.registry.ModRecipeTypes;
+import net.firetastesgood.ageofminecraft.registry.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -46,6 +40,8 @@ public class EngenderMod {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        ModSounds.SOUND_EVENTS.register(modEventBus);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

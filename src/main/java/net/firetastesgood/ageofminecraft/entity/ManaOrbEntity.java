@@ -95,7 +95,6 @@ public class ManaOrbEntity extends Entity {
                 mergeNearby(MERGE_RADIUS);
             }
 
-            // despawn 5 minutes
             if (this.tickCount >= 6000) {
                 this.discard();
             }

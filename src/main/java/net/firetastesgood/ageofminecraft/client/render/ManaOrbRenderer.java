@@ -16,15 +16,12 @@ import org.joml.Matrix4f;
 public class ManaOrbRenderer extends EntityRenderer<ManaOrbEntity> {
     private static final ResourceLocation XP_TEX = new ResourceLocation("minecraft", "textures/entity/experience_orb.png");
 
-    // spritesheet
     private static final float TEX_SIZE = 64f;
     private static final float TILE     = 16f;
 
-    // base scale + per-tier growth
     private static final float BASE_SCALE   = 0.18f;
     private static final float PER_TIER_ADD = 0.06f;
 
-    // color pulse settings
     private static final float PULSE_SPEED = 6.0f;
     private static final float R0 = 0.22f, G0 = 0.55f, B0 = 1.00f;
     private static final float R1 = 0.45f, G1 = 0.85f, B1 = 1.00f;
@@ -55,7 +52,6 @@ public class ManaOrbRenderer extends EntityRenderer<ManaOrbEntity> {
         float u1 = ((tileCol * TILE) + TILE) / TEX_SIZE;
         float v1 = ((tileRow * TILE) + TILE) / TEX_SIZE;
 
-        // color pulse
         float t = 0.5f + 0.5f * (float)Math.sin((orb.tickCount + partialTicks + (orb.getId() & 7)) / PULSE_SPEED);
         float r = lerp(R0, R1, t), g = lerp(G0, G1, t), b = lerp(B0, B1, t), aCol = 1.0f;
 
@@ -66,13 +62,11 @@ public class ManaOrbRenderer extends EntityRenderer<ManaOrbEntity> {
         Matrix4f poseMat = last.pose();
         Matrix3f normalMat = last.normal();
 
-        // front
         addVertex(vc, poseMat, normalMat, 1, 0, 0, u1, v0, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 0, 0, u0, v0, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 1, 0, u0, v1, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 1, 1, 0, u1, v1, packedLight, r, g, b, aCol);
 
-        // back
         addVertex(vc, poseMat, normalMat, 1, 1, 0, u1, v1, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 1, 0, u0, v1, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 0, 0, u0, v0, packedLight, r, g, b, aCol);

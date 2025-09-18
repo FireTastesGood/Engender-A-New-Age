@@ -27,5 +27,12 @@
   "item.ageofminecraft.crystal.entropy.desc": "Allows you to collect Entropy, then funnel it into the Fusion Crafter to make mobs.",
   "item.ageofminecraft.infinite_wellspring.desc": "Allows you to collect INFINITE Mana and Entropy, then funnel it into the Fusion Crafter to make mobs.",
 
-  "block.ageofminecraft.fusion_crafter": "Fusion Crafter"
+  "block.ageofminecraft.fusion_crafter": "Fusion Crafter",
+
+  "item.ageofminecraft.wooden_cleaver": "Wooden Cleaver",
+  "item.ageofminecraft.stone_cleaver": "Stone Cleaver",
+  "item.ageofminecraft.iron_cleaver": "Iron Cleaver",
+  "item.ageofminecraft.golden_cleaver": "Golden Cleaver",
+  "item.ageofminecraft.diamond_cleaver": "Diamond Cleaver",
+  "item.ageofminecraft.netherite_cleaver": "Netherite Cleaver"
 }

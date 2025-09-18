@@ -63,13 +63,11 @@ public class EntropyOrbRenderer extends EntityRenderer<EntropyOrbEntity> {
         Matrix4f poseMat = last.pose();
         Matrix3f normalMat = last.normal();
 
-        // front
         addVertex(vc, poseMat, normalMat, 1, 0, 0, u1, v0, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 0, 0, u0, v0, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 1, 0, u0, v1, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 1, 1, 0, u1, v1, packedLight, r, g, b, aCol);
 
-        // back
         addVertex(vc, poseMat, normalMat, 1, 1, 0, u1, v1, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 1, 0, u0, v1, packedLight, r, g, b, aCol);
         addVertex(vc, poseMat, normalMat, 0, 0, 0, u0, v0, packedLight, r, g, b, aCol);

@@ -21,6 +21,12 @@ public class ModCreativeTabs {
                         out.accept(ModItems.ENTROPY_CRYSTAL_1.get());
                         out.accept(ModItems.INFINITE_WELLSPRING.get());
                         out.accept(ModBlocks.FUSION_CRAFTER.get());
+                        out.accept(ModItems.WOODEN_CLEAVER.get());
+                        out.accept(ModItems.STONE_CLEAVER.get());
+                        out.accept(ModItems.IRON_CLEAVER.get());
+                        out.accept(ModItems.GOLDEN_CLEAVER.get());
+                        out.accept(ModItems.DIAMOND_CLEAVER.get());
+                        out.accept(ModItems.NETHERITE_CLEAVER.get());
                     })
                     .build());
 }

@@ -1,0 +1,7 @@
+{
+  "slashflesh": {
+    "sounds": [
+      { "name": "ageofminecraft:slashflesh", "stream": false }
+    ]
+  }
+}

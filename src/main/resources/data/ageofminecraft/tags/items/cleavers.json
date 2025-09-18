@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "ageofminecraft:wooden_cleaver",
+    "ageofminecraft:stone_cleaver",
+    "ageofminecraft:iron_cleaver",
+    "ageofminecraft:golden_cleaver",
+    "ageofminecraft:diamond_cleaver",
+    "ageofminecraft:netherite_cleaver"
+  ]
+}

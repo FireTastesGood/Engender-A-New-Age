@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " DD",
+    " DD",
+    " SD"
+  ],
+  "key": {
+    "D": { "tag": "minecraft:planks" },
+    "S": { "item": "minecraft:stick" }
+  },
+  "result": { "item": "ageofminecraft:wooden_cleaver", "count": 1 }
+}
