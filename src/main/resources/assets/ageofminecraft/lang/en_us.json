@@ -34,5 +34,12 @@
   "item.ageofminecraft.iron_cleaver": "Iron Cleaver",
   "item.ageofminecraft.golden_cleaver": "Golden Cleaver",
   "item.ageofminecraft.diamond_cleaver": "Diamond Cleaver",
-  "item.ageofminecraft.netherite_cleaver": "Netherite Cleaver"
+  "item.ageofminecraft.netherite_cleaver": "Netherite Cleaver",
+
+  "enchantment.ageofminecraft.disruption": "Ender Disruption",
+  "enchantment.ageofminecraft.conviction": "Conviction",
+  "enchantment.ageofminecraft.crusher": "Destruction",
+  "enchantment.ageofminecraft.obliteration": "Obliteration",
+  "enchantment.ageofminecraft.neglection": "Neglection",
+  "enchantment.ageofminecraft.superweapon": "The Eraser Command"
 }

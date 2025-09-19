@@ -42,6 +42,9 @@ public class EngenderMod {
         MinecraftForge.EVENT_BUS.register(this);
 
         ModSounds.SOUND_EVENTS.register(modEventBus);
+
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModEnchantments.ENCHANTMENTS.register(bus);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
