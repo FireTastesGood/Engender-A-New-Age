@@ -13,14 +13,14 @@ public final class ModEnchantments {
     public static final DeferredRegister<Enchantment> ENCHANTMENTS =
             DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, EngenderMod.MODID);
 
+    public static final RegistryObject<Enchantment> CRUSHER = ENCHANTMENTS.register("crusher",
+            () -> new DestructionEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.WEAPON, EquipmentSlot.MAINHAND));
+
     public static final RegistryObject<Enchantment> DISRUPTION = ENCHANTMENTS.register("disruption",
             () -> new EnderDisruptionEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentCategory.WEAPON, EquipmentSlot.MAINHAND));
 
     public static final RegistryObject<Enchantment> CONVICTION = ENCHANTMENTS.register("conviction",
             () -> new ConvictionEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentCategory.WEAPON, EquipmentSlot.MAINHAND));
-
-    public static final RegistryObject<Enchantment> CRUSHER = ENCHANTMENTS.register("crusher",
-            () -> new DestructionEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.WEAPON, EquipmentSlot.MAINHAND));
 
     public static final RegistryObject<Enchantment> OBLITERATION = ENCHANTMENTS.register("obliteration",
             () -> new ObliterationEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.WEAPON, EquipmentSlot.MAINHAND));
