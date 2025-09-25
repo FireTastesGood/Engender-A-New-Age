@@ -13,6 +13,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 
 @Mod.EventBusSubscriber(modid = EngenderMod.MODID)
 public class MobDropsHandler {
@@ -29,10 +30,10 @@ public class MobDropsHandler {
     public static void onMobDeath(LivingDeathEvent event) {
         LivingEntity victim = event.getEntity();
         if (!(victim.level() instanceof ServerLevel level)) return;
+        if (victim instanceof EnderDragon) return;
 
         Entity attacker = event.getSource().getEntity();
         if (attacker == null) return;
-
         if (attacker instanceof LivingEntity && victim.isAlliedTo((LivingEntity) attacker)) return;
         if (!level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) return;
 

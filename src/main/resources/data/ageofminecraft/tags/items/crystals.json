@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "ageofminecraft:mana_crystal_1",
+    "ageofminecraft:mana_crystal_2",
+    "ageofminecraft:mana_crystal_3",
+    "ageofminecraft:mana_crystal_4",
+    "ageofminecraft:mana_crystal_5",
+    "ageofminecraft:mana_crystal_6",
+    "ageofminecraft:mana_crystal_7",
+    "ageofminecraft:mana_crystal_8",
+    "ageofminecraft:mana_crystal_9",
+    "ageofminecraft:mana_crystal_10",
+    "ageofminecraft:entropy_crystal_1",
+    "ageofminecraft:entropy_crystal_2",
+    "ageofminecraft:entropy_crystal_3",
+    "ageofminecraft:entropy_crystal_4",
+    "ageofminecraft:entropy_crystal_5",
+    "ageofminecraft:entropy_crystal_6",
+    "ageofminecraft:entropy_crystal_7",
+    "ageofminecraft:entropy_crystal_8",
+    "ageofminecraft:entropy_crystal_9",
+    "ageofminecraft:entropy_crystal_10",
+    "ageofminecraft:infinite_wellspring"
+  ]
+}

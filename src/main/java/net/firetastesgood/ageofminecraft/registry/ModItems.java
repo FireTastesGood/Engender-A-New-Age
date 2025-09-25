@@ -1,10 +1,7 @@
 package net.firetastesgood.ageofminecraft.registry;
 
 import net.firetastesgood.ageofminecraft.EngenderMod;
-import net.firetastesgood.ageofminecraft.items.EntropyCrystalItem;
-import net.firetastesgood.ageofminecraft.items.InfiniteWellspringItem;
-import net.firetastesgood.ageofminecraft.items.ManaCrystalItem;
-import net.firetastesgood.ageofminecraft.items.CleaverItem;
+import net.firetastesgood.ageofminecraft.items.*;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;

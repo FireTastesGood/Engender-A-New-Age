@@ -24,6 +24,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import static net.firetastesgood.ageofminecraft.registry.ModTags.Items.CRYSTALS;
+import static net.firetastesgood.ageofminecraft.registry.ModTags.Items.FUSION_PARTS;
 
 public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvider, Clearable {
 
@@ -31,10 +33,8 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
         @Override public int getMaxStackSize() { return 64; }
         @Override public boolean canPlaceItem(int slot, ItemStack stack) {
             return switch (slot) {
-                case 0 -> isFusionPart(stack);
-                case 1 -> stack.getItem() instanceof ManaCrystalItem
-                        || stack.getItem() instanceof EntropyCrystalItem
-                        || stack.getItem() == ModItems.INFINITE_WELLSPRING.get();
+                case 0 -> stack.is(FUSION_PARTS);
+                case 1 -> stack.is(CRYSTALS);
                 case 2 -> false;
                 default -> false;
             };
@@ -167,6 +167,14 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
         if (part.isEmpty()) { resetIfActive(); return; }
         if (!hasOutputRoom()) return;
 
+        if (lockedRecipe != null) {
+            FusionRecipe check = FusionRecipe.find(level, part);
+            if (check == null || check != lockedRecipe) {
+                resetIfActive();
+                return;
+            }
+        }
+
         FusionRecipe recipe = (lockedRecipe != null) ? lockedRecipe : FusionRecipe.find(level, part);
         if (recipe == null) { resetIfActive(); return; }
 
@@ -239,7 +247,7 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
     }
 
     private void resetIfActive() {
-        if (progress > 0) {
+        if (progress > 0 || lockedRecipe != null) {
             progress = 0;
             manaFrac = 0;
             entropyFrac = 0;
@@ -315,7 +323,6 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
 
     public SimpleContainer getItems() { return items; }
     public ContainerData getData() { return dataAccess; }
-    private static boolean isFusionPart(ItemStack stack) { return stack.getItem() instanceof FusionPartItem; }
 
     @Override
     public void clearContent() {

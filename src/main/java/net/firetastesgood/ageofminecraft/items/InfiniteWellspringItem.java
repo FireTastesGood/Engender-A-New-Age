@@ -87,10 +87,16 @@ public class InfiniteWellspringItem extends Item {
         int m = getMana(stack);
         int e = getEntropy(stack);
 
-        tip.add(Component.literal("Mana: ")
-                .append(Component.literal(String.valueOf(m)).withStyle(ChatFormatting.AQUA)));
+        tip.add(
+                Component.literal("Mana : ")
+                        .append(Component.literal(String.valueOf(m)))
+                        .withStyle(ChatFormatting.AQUA)
+        );
 
-        tip.add(Component.literal("Entropy: ")
-                .append(Component.literal(String.valueOf(e)).withStyle(ChatFormatting.DARK_RED)));
+        tip.add(
+                Component.literal("Entropy : ")
+                        .append(Component.literal(String.valueOf(e)))
+                        .withStyle(ChatFormatting.DARK_RED)
+        );
     }
 }

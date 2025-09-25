@@ -48,9 +48,12 @@ public class ManaCrystalItem extends Item {
         int max = getMax();
         tip.add(Component.translatable("item.ageofminecraft.crystal.mana.desc")
                 .withStyle(ChatFormatting.GRAY));
-        tip.add(Component.literal("Mana Count: ")
-                .append(Component.literal(String.valueOf(cur)).withStyle(ChatFormatting.AQUA))
-                .append(Component.literal(" / "))
-                .append(Component.literal(String.valueOf(max)).withStyle(ChatFormatting.AQUA)));
+        tip.add(
+                Component.literal("Mana Count : ")
+                        .append(String.valueOf(cur))
+                        .append("/")
+                        .append(String.valueOf(max))
+                        .withStyle(ChatFormatting.AQUA)
+        );
     }
 }

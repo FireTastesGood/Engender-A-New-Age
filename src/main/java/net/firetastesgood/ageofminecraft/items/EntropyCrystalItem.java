@@ -48,9 +48,12 @@ public class EntropyCrystalItem extends Item {
         int max = getMax();
         tip.add(Component.translatable("item.ageofminecraft.crystal.entropy.desc")
                 .withStyle(ChatFormatting.GRAY));
-        tip.add(Component.literal("Entropy Count: ")
-                .append(Component.literal(String.valueOf(cur)).withStyle(ChatFormatting.DARK_RED))
-                .append(Component.literal(" / "))
-                .append(Component.literal(String.valueOf(max)).withStyle(ChatFormatting.DARK_RED)));
+        tip.add(
+                Component.literal("Mana Count : ")
+                        .append(String.valueOf(cur))
+                        .append("/")
+                        .append(String.valueOf(max))
+                        .withStyle(ChatFormatting.DARK_RED)
+        );
     }
 }
