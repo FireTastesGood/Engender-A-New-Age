@@ -11,11 +11,14 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.phys.Vec3;
 
 public class FusionBrain {
     public static final String NBT_OWNER        = "FusionOwner";
@@ -23,35 +26,29 @@ public class FusionBrain {
     public static final String NBT_GAVE_XP      = "FusionGaveFirstXP";
     public static final String NBT_FIRST_XP     = "FusionFirstXP";
     public static final String NBT_ATK_OVERRIDE = "FusionAtkOverride";
-    public static final String NBT_SPAWN_FX     = "FusionPlayedSpawnFX"; // ← new: one-time spawn sound
+    public static final String NBT_SPAWN_FX     = "FusionPlayedSpawnFX";
 
-    /** Attach a consistent “tamed” brain: sit, follow, assist, basic melee + self-defense. */
     public static void attachCommonGoals(Mob mob, FusionData data) {
         if (mob == null || data == null) return;
 
-        // Sit (highest priority)
         mob.goalSelector.addGoal(0, new SitGoal(mob, data));
 
-        // Follow owner
         mob.goalSelector.addGoal(3, new FollowOwnerGoalLike(mob, data, 1.2D, 6.0F, 2.0F, 48.0F));
 
-        // Melee + self-defense (for pathfinders)
         if (mob instanceof PathfinderMob pm) {
             mob.goalSelector.addGoal(4, new MeleeAttackGoal(pm, 1.2D, true));
             mob.targetSelector.addGoal(4, new HurtByTargetGoal(pm));
         }
 
-        // Assist owner
         mob.targetSelector.addGoal(1, new OwnerHurtTargetGoalLike(mob, data));
         mob.targetSelector.addGoal(2, new OwnerHurtByTargetGoalLike(mob, data));
     }
 
-    /* -------------------- Data -------------------- */
     public static class FusionData {
         private UUID owner;
         private boolean sitting;
         private boolean gaveFirstXp;
-        private boolean playedSpawnFx; // ← new: persist that we played spawn sound
+        private boolean playedSpawnFx;
         private int firstSpawnXp;
         private double attackOverride = Double.NEGATIVE_INFINITY;
 
@@ -59,7 +56,7 @@ public class FusionBrain {
             if (owner != null) tag.putUUID(NBT_OWNER, owner);
             tag.putBoolean(NBT_SITTING, sitting);
             tag.putBoolean(NBT_GAVE_XP, gaveFirstXp);
-            tag.putBoolean(NBT_SPAWN_FX, playedSpawnFx); // ← new
+            tag.putBoolean(NBT_SPAWN_FX, playedSpawnFx);
             tag.putInt(NBT_FIRST_XP, firstSpawnXp);
             if (attackOverride != Double.NEGATIVE_INFINITY) tag.putDouble(NBT_ATK_OVERRIDE, attackOverride);
         }
@@ -68,7 +65,7 @@ public class FusionBrain {
             if (tag.hasUUID(NBT_OWNER)) owner = tag.getUUID(NBT_OWNER);
             sitting = tag.getBoolean(NBT_SITTING);
             gaveFirstXp = tag.getBoolean(NBT_GAVE_XP);
-            playedSpawnFx = tag.getBoolean(NBT_SPAWN_FX); // ← new
+            playedSpawnFx = tag.getBoolean(NBT_SPAWN_FX);
             firstSpawnXp = tag.getInt(NBT_FIRST_XP);
             if (tag.contains(NBT_ATK_OVERRIDE)) attackOverride = tag.getDouble(NBT_ATK_OVERRIDE);
         }
@@ -83,8 +80,8 @@ public class FusionBrain {
         public void setSitting(boolean b) { sitting = b; }
         public boolean gaveFirstXp() { return gaveFirstXp; }
         public void setGaveFirstXp(boolean b) { gaveFirstXp = b; }
-        public boolean playedSpawnFx() { return playedSpawnFx; }          // ← new
-        public void setPlayedSpawnFx(boolean b) { playedSpawnFx = b; }     // ← new
+        public boolean playedSpawnFx() { return playedSpawnFx; }
+        public void setPlayedSpawnFx(boolean b) { playedSpawnFx = b; }
         public int firstSpawnXp() { return firstSpawnXp; }
         public void setFirstSpawnXp(int v) { firstSpawnXp = v; }
         public boolean hasAttackOverride() { return attackOverride != Double.NEGATIVE_INFINITY; }
@@ -92,9 +89,6 @@ public class FusionBrain {
         public void setAttackOverride(double v) { attackOverride = v; }
     }
 
-    /* -------------------- Goals -------------------- */
-
-    /** Simple “sit” that halts movement and persists while flagged. */
     public static class SitGoal extends Goal {
         private final Mob mob;
         private final FusionData data;
@@ -102,7 +96,7 @@ public class FusionBrain {
         public SitGoal(Mob mob, FusionData data) {
             this.mob = Objects.requireNonNull(mob, "mob");
             this.data = Objects.requireNonNull(data, "FusionData");
-            this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP));
         }
 
         @Override public boolean canUse() { return data.isSitting(); }
@@ -111,7 +105,6 @@ public class FusionBrain {
         @Override public void stop() { mob.setTarget(null); }
     }
 
-    /** Follow the owner; teleports if too far; respects sit, spectators, and sleepers. */
     public static class FollowOwnerGoalLike extends Goal {
         private final Mob mob;
         private final FusionData data;
@@ -134,7 +127,6 @@ public class FusionBrain {
         @Override
         public boolean canUse() {
             if (data.isSitting()) return false;
-            // do not follow while actively fighting
             if (mob.getTarget() != null && mob.getTarget().isAlive()) return false;
             var owner = data.getOwner(mob.level()).orElse(null);
             if (owner == null || owner.isSpectator() || owner.isSleeping()) return false;
@@ -144,7 +136,6 @@ public class FusionBrain {
         @Override
         public boolean canContinueToUse() {
             if (data.isSitting()) return false;
-            // keep follow paused during combat
             if (mob.getTarget() != null && mob.getTarget().isAlive()) return false;
             var owner = data.getOwner(mob.level()).orElse(null);
             if (owner == null || owner.isSpectator() || owner.isSleeping()) return false;
@@ -162,12 +153,11 @@ public class FusionBrain {
             if (dist >= teleportDist && tpCooldown == 0) {
                 if (tryTeleportNear(owner.blockPosition())) {
                     mob.getNavigation().stop();
-                    tpCooldown = 20; // 1s cooldown
+                    tpCooldown = 20;
                     return;
                 }
             }
 
-            // avoid spamming path recalcs
             if (mob.getNavigation().isDone()) {
                 mob.getNavigation().moveTo(owner, speed);
             }
@@ -182,7 +172,7 @@ public class FusionBrain {
                 cursor.set(base.getX() + dx, base.getY(), base.getZ() + dz);
                 if (isSafeTeleport(cursor)) {
                     mob.teleportTo(cursor.getX() + 0.5, cursor.getY(), cursor.getZ() + 0.5);
-                    mob.resetFallDistance(); // ← new: prevent residual fall damage after teleport
+                    mob.resetFallDistance();
                     return true;
                 }
             }
@@ -191,19 +181,14 @@ public class FusionBrain {
 
         private boolean isSafeTeleport(BlockPos pos) {
             Level level = mob.level();
-            // two blocks of headroom
             if (!level.getBlockState(pos).isAir() || !level.getBlockState(pos.above()).isAir()) return false;
-            // must stand on something solid
             if (level.getBlockState(pos.below()).isAir()) return false;
-            // avoid fluids
             if (!level.getFluidState(pos).isEmpty() || !level.getFluidState(pos.above()).isEmpty()) return false;
-            // collision clearance at destination
             var aabb = mob.getDimensions(Pose.STANDING).makeBoundingBox(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             return level.noCollision(mob, aabb);
         }
     }
 
-    /** Attack what the owner is attacking, with safety checks. */
     public static class OwnerHurtTargetGoalLike extends Goal {
         private final Mob mob;
         private final FusionData data;
@@ -235,7 +220,6 @@ public class FusionBrain {
 
         @Override
         public void stop() {
-            // clear correctly (don’t compare against null)
             LivingEntity prev = lastOwnerTarget;
             lastOwnerTarget = null;
             if (mob.getTarget() == prev) {
@@ -244,7 +228,6 @@ public class FusionBrain {
         }
     }
 
-    /** Attack who hurt the owner, with safety checks. */
     public static class OwnerHurtByTargetGoalLike extends Goal {
         private final Mob mob;
         private final FusionData data;
@@ -276,7 +259,6 @@ public class FusionBrain {
 
         @Override
         public void stop() {
-            // clear correctly (don’t compare against null)
             LivingEntity prev = lastAttacker;
             lastAttacker = null;
             if (mob.getTarget() == prev) {
@@ -285,35 +267,40 @@ public class FusionBrain {
         }
     }
 
-    /* -------------------- Utils -------------------- */
-
-    /** Award first-spawn XP once and play a one-time spawn sound (server-side only). */
     public static void maybeGiveFirstSpawnXP(Mob mob, FusionData data) {
         if (data == null) return;
         if (mob.level().isClientSide) return;
 
         ServerLevel sl = (ServerLevel) mob.level();
 
-        // Play spawn sound once, independent of XP
         if (!data.playedSpawnFx()) {
             sl.playSound(
-                    null,                      // all nearby players
+                    null,
                     mob.blockPosition(),
                     ModSounds.FUSION_SPAWN.get(),
                     SoundSource.NEUTRAL,
                     1.0f, 1.0f
             );
+
+            Vec3 p = mob.position().add(0.0, mob.getBbHeight() * 0.5, 0.0);
+
+            sl.sendParticles(ParticleTypes.POOF, p.x, p.y, p.z, 30, 0.4, 0.325, 0.4, 0.035);
+
+            sl.sendParticles(ParticleTypes.WITCH, p.x, p.y, p.z, 30, 0.4, 0.325, 0.4, 0.035);
+
+            sl.sendParticles(ParticleTypes.END_ROD, p.x, p.y, p.z, 30, 0.4, 0.325, 0.4, 0.035);
+
+            sl.sendParticles(ParticleTypes.HAPPY_VILLAGER, p.x, p.y, p.z, 30, 0.4, 0.325, 0.4, 0.035);
+
             data.setPlayedSpawnFx(true);
         }
 
-        // Award first-spawn XP once
         if (!data.gaveFirstXp() && data.firstSpawnXp() > 0) {
             ExperienceOrb.award(sl, mob.position(), data.firstSpawnXp());
             data.setGaveFirstXp(true);
         }
     }
 
-    /** Toggle sit and clear navigation/target when sitting. */
     public static void toggleSit(Mob mob, FusionData data) {
         if (data == null) return;
         boolean now = !data.isSitting();
@@ -324,13 +311,12 @@ public class FusionBrain {
         }
     }
 
-    /** Shared target safety checks. */
     private static boolean isBadTarget(LivingEntity candidate, Player owner) {
         if (candidate == null || !candidate.isAlive()) return true;
         if (candidate == owner) return true;
         if (candidate instanceof Player p && p.isCreative()) return true;
         if (candidate.getTeam() != null && owner.getTeam() != null && candidate.getTeam().isAlliedTo(owner.getTeam())) return true;
-        if (candidate instanceof OwnableFusion) return true; // don’t attack other fusions (esp. same owner)
+        if (candidate instanceof OwnableFusion) return true;
         return false;
     }
 }

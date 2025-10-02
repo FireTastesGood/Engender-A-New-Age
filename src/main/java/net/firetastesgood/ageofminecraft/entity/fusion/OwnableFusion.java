@@ -1,4 +1,3 @@
-// Put this in its own file, e.g. net.firetastesgood.ageofminecraft.entity.fusion.OwnableFusion.java
 package net.firetastesgood.ageofminecraft.entity.fusion;
 
 import net.minecraft.world.entity.player.Player;

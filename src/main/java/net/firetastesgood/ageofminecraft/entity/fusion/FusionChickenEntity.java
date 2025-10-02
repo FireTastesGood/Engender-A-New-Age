@@ -1,10 +1,10 @@
 package net.firetastesgood.ageofminecraft.entity.fusion;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;                     // ← added
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;               // ← added
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,6 +16,8 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.AgeableMob;
 
 public class FusionChickenEntity extends Chicken implements OwnableFusion {
     private FusionBrain.FusionData fusionData;
@@ -26,42 +28,35 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
         setPersistenceRequired();
     }
 
-    /* ---------------- Fall Damage & Loot ---------------- */
-
-    // Chickens shouldn't take fall damage; make it explicit
     @Override
     public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
         return false;
     }
 
-    // Share vanilla chicken drops: minecraft:entities/chicken
     @Override
     protected ResourceLocation getDefaultLootTable() {
         return new ResourceLocation("minecraft", "entities/chicken");
     }
 
-    /* ---------------- Goals ---------------- */
-
     @Override
     protected void registerGoals() {
-        ensureFusionData(); // make sure it's ready inside Mob ctor chain
-        super.registerGoals(); // keep vanilla basics
+        ensureFusionData();
+        super.registerGoals();
 
-        // keep float
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        // remove only goals that fight tamed/follow behavior
         removeGoals(this.goalSelector, PanicGoal.class, AvoidEntityGoal.class);
 
-        // sit > melee > follow  (combat should outrank following)
         this.goalSelector.addGoal(0, new FusionBrain.SitGoal(this, fusionData));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(4, new FusionBrain.FollowOwnerGoalLike(this, fusionData, 1.25D, 3.0F, 1.8F, 48.0F));
 
-        // owner assist + self-defense
         this.targetSelector.addGoal(1, new FusionBrain.OwnerHurtTargetGoalLike(this, fusionData));
         this.targetSelector.addGoal(2, new FusionBrain.OwnerHurtByTargetGoalLike(this, fusionData));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+
+        this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(8, new net.minecraft.world.entity.ai.goal.RandomLookAroundGoal(this));
     }
 
     private static void removeGoals(net.minecraft.world.entity.ai.goal.GoalSelector selector, Class<?>... types) {
@@ -72,22 +67,15 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
         }
     }
 
-    /* ---------------- Lifecycle ---------------- */
-
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
         ensureFusionData();
 
-        // apply attack override as soon as we exist
         if (fusionData.hasAttackOverride() && getAttribute(Attributes.ATTACK_DAMAGE) != null) {
             getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(fusionData.attackOverride());
         }
-
-        // NOTE: removed the maybeGiveFirstSpawnXP() call here to avoid double-award
     }
-
-    /* ---------------- Save / Load ---------------- */
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
@@ -101,10 +89,8 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
         super.readAdditionalSaveData(tag);
         ensureFusionData();
 
-        // Load your normal FusionData first
         fusionData.load(tag);
 
-        // Bridge: accept summon/save NBT variations and optional "fusion" subtag
         if (tag.contains("FirstSpawnXP")) {
             fusionData.setFirstSpawnXp(tag.getInt("FirstSpawnXP"));
         } else if (tag.contains("first_spawn_xp")) {
@@ -124,29 +110,24 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
             else if (f.contains("attack_damage_override")) setFusionAttackOverride(f.getDouble("attack_damage_override"));
         }
 
-        // re-apply attack override after load
         if (fusionData.hasAttackOverride() && getAttribute(Attributes.ATTACK_DAMAGE) != null) {
             getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(fusionData.attackOverride());
         }
     }
-
-    /* ---------------- Player Interaction ---------------- */
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND) return super.mobInteract(player, hand);
         ensureFusionData();
 
-        // Claim ownership: crouch + right-click if unowned
         if (fusionData.getOwner(level()).isEmpty() && player.isShiftKeyDown()) {
             if (!level().isClientSide) {
                 setFusionOwner(player);
-                player.swing(hand, true); // server broadcasts swing
+                player.swing(hand, true);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide); // client animates immediately
+            return InteractionResult.sidedSuccess(level().isClientSide);
         }
 
-        // Owner: empty-hand right-click toggles sit/follow
         if (isOwnedBy(player) && player.getItemInHand(hand).isEmpty()) {
             if (!level().isClientSide) {
                 FusionBrain.toggleSit(this, fusionData);
@@ -156,9 +137,9 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
                 player.displayClientMessage(
                         net.minecraft.network.chat.Component.translatable(
                                 "message.ageofminecraft.fusion.state." + (nowSitting ? "sitting" : "following"),
-                                this.getDisplayName() // uses custom name if set
+                                this.getDisplayName()
                         ),
-                        true // action bar (bed-style popup)
+                        true
                 );
             }
             return InteractionResult.sidedSuccess(level().isClientSide);
@@ -166,8 +147,6 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
 
         return super.mobInteract(player, hand);
     }
-
-    /* ---------------- OwnableFusion (set by FusionItem) ---------------- */
 
     @Override
     public void setFusionOwner(Player p) {
@@ -190,8 +169,6 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
         }
     }
 
-    /* ---------------- Helpers ---------------- */
-
     private void ensureFusionData() {
         if (this.fusionData == null) this.fusionData = new FusionBrain.FusionData();
     }
@@ -203,12 +180,7 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
                 .orElse(false);
     }
 
-    /**
-     * Register attributes in your EntityAttributeCreationEvent:
-     * event.put(ModEntityTypes.CHICKEN_FUSION.get(), FusionChickenEntity.createAttributes().build());
-     */
     public static AttributeSupplier.Builder createAttributes() {
-        // Base chicken attrs + attack damage so we can override safely
         return Chicken.createAttributes()
                 .add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
@@ -218,8 +190,30 @@ public class FusionChickenEntity extends Chicken implements OwnableFusion {
         super.tick();
         if (!level().isClientSide) {
             ensureFusionData();
-            // one-time XP grant (covers JSON/item-provided XP)
             FusionBrain.maybeGiveFirstSpawnXP(this, fusionData);
         }
+    }
+
+    @Override
+    public Chicken getBreedOffspring(ServerLevel level, AgeableMob partner) {
+        FusionChickenEntity baby = net.firetastesgood.ageofminecraft.registry.ModEntityTypes
+                .CHICKEN_FUSION.get().create(level);
+        if (baby != null) {
+            Player p1 = (fusionData != null) ? fusionData.getOwner(level).orElse(null) : null;
+            Player p2 = (partner instanceof FusionChickenEntity f2 && f2.fusionData != null)
+                    ? f2.fusionData.getOwner(level).orElse(null) : null;
+
+            Player picked = null;
+            if (p1 != null && p2 != null) {
+                picked = p1.getUUID().equals(p2.getUUID())
+                        ? p1
+                        : (this.getRandom().nextBoolean() ? p1 : p2);
+            } else {
+                picked = (p1 != null) ? p1 : p2;
+            }
+
+            if (picked != null) baby.setFusionOwner(picked);
+        }
+        return baby;
     }
 }
