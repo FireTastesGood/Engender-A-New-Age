@@ -3,5 +3,10 @@
     "sounds": [
       { "name": "ageofminecraft:slashflesh", "stream": false }
     ]
+  },
+  "fusion_spawn": {
+    "sounds": [
+      { "name": "ageofminecraft:fusion_spawn", "stream": false }
+    ]
   }
 }

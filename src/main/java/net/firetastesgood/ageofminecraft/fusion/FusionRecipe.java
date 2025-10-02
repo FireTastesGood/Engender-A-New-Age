@@ -20,13 +20,30 @@ public class FusionRecipe implements Recipe<Container> {
     private final int manaCost;
     private final int entropyCost;
 
-    public FusionRecipe(ResourceLocation id, Item input, ItemStack output, int duration, int manaCost, int entropyCost) {
+    private final ResourceLocation mobId;
+    private final int firstSpawnXp;
+    private final double attackDamageOverride;
+
+    public FusionRecipe(
+            ResourceLocation id,
+            Item input,
+            ItemStack output,
+            int duration,
+            int manaCost,
+            int entropyCost,
+            ResourceLocation mobId,
+            int firstSpawnXp,
+            double attackDamageOverride
+    ) {
         this.id = id;
         this.input = input;
         this.output = output;
         this.duration = duration;
         this.manaCost = manaCost;
         this.entropyCost = entropyCost;
+        this.mobId = mobId;
+        this.firstSpawnXp = firstSpawnXp;
+        this.attackDamageOverride = attackDamageOverride;
     }
 
     public static FusionRecipe find(Level level, ItemStack part) {
@@ -39,10 +56,14 @@ public class FusionRecipe implements Recipe<Container> {
         return null;
     }
 
-    public int duration()     { return duration; }
-    public int manaCost()     { return manaCost; }
-    public int entropyCost()  { return entropyCost; }
+    public int duration() { return duration; }
+    public int manaCost() { return manaCost; }
+    public int entropyCost() { return entropyCost; }
     public ItemStack output() { return output; }
+
+    public ResourceLocation mobId() { return mobId; }
+    public int firstSpawnXp() { return firstSpawnXp; }
+    public double attackDamageOverride() { return attackDamageOverride; }
 
     @Override public boolean matches(Container inv, Level level) {
         ItemStack in = inv.getItem(0);
@@ -53,29 +74,17 @@ public class FusionRecipe implements Recipe<Container> {
         return output.copy();
     }
 
-    @Override public boolean canCraftInDimensions(int w, int h) {
-        return true;
-    }
+    @Override public boolean canCraftInDimensions(int w, int h) { return true; }
 
-    @Override public ItemStack getResultItem(RegistryAccess access) {
-        return output.copy();
-    }
+    @Override public ItemStack getResultItem(RegistryAccess access) { return output.copy(); }
 
-    @Override public ResourceLocation getId() {
-        return id;
-    }
+    @Override public ResourceLocation getId() { return id; }
 
-    @Override public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.FUSION_CRAFTING_SERIALIZER.get();
-    }
+    @Override public RecipeSerializer<?> getSerializer() { return ModRecipeTypes.FUSION_CRAFTING_SERIALIZER.get(); }
 
-    @Override public RecipeType<?> getType() {
-        return ModRecipeTypes.FUSION_CRAFTING.get();
-    }
+    @Override public RecipeType<?> getType() { return ModRecipeTypes.FUSION_CRAFTING.get(); }
 
-    @Override public boolean isSpecial() {
-        return true;
-    }
+    @Override public boolean isSpecial() { return true; }
 
     public Item inputItem() { return input; }
 }

@@ -1,0 +1,12 @@
+{
+  "type": "ageofminecraft:fusion_crafting",
+  "catalyst": { "item": "ageofminecraft:fusion_part_chicken" },
+  "result":  { "item": "ageofminecraft:chicken_fusion", "count": 1 },
+  "duration": 200,
+  "mana_cost": 1,
+  "entropy_cost": 0,
+
+  "mob_id": "minecraft:chicken",
+  "first_spawn_xp": 1,
+  "attack_damage_override": 1.0
+}

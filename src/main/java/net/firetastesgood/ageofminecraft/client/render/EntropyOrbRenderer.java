@@ -54,7 +54,7 @@ public class EntropyOrbRenderer extends EntityRenderer<EntropyOrbEntity> {
         float v1 = ((tileRow * TILE) + TILE) / TEX_SIZE;
 
         float t = 0.5f + 0.5f * (float)Math.sin((orb.tickCount + partialTicks + (orb.getId() & 7)) / PULSE_SPEED);
-        float r = lerp(R0, R1, t), g = lerp(G0, G1, t), b = lerp(B0, B1, t), aCol = 1.0f;
+        float r = lerp(R0, R1, t), g = lerp(G0, G1, t), b = lerp(B0, B1, t), aCol = 0.6f;
 
         VertexConsumer vc = buf.getBuffer(RenderType.entityTranslucent(XP_TEX));
 

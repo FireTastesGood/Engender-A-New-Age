@@ -41,5 +41,23 @@
   "enchantment.ageofminecraft.crusher": "Destruction",
   "enchantment.ageofminecraft.obliteration": "Obliteration",
   "enchantment.ageofminecraft.neglection": "Neglection",
-  "enchantment.ageofminecraft.superweapon": "The Eraser Command"
+  "enchantment.ageofminecraft.superweapon": "The Eraser Command",
+
+  "item.ageofminecraft.fusion_part_chicken": "Fusion Part (Chicken)",
+  "item.ageofminecraft.fusion_part_cow": "Fusion Part (Cow)",
+  "item.ageofminecraft.fusion_part_pig": "Fusion Part (Pig)",
+  "item.ageofminecraft.fusion_part_sheep": "Fusion Part (Sheep)",
+
+  "item.ageofminecraft.chicken_fusion": "Chicken Fusion",
+  "item.ageofminecraft.cow_fusion": "Cow Fusion",
+  "item.ageofminecraft.pig_fusion": "Pig Fusion",
+  "item.ageofminecraft.sheep_fusion": "Sheep Fusion",
+
+  "entity.ageofminecraft.chicken_fusion": "Chicken",
+
+  "entity.ageofminecraft.mana_orb": "Mana Orb",
+  "entity.ageofminecraft.entropy_orb": "Entropy Orb",
+
+  "message.ageofminecraft.fusion.state.sitting": "Your %s is now sitting",
+  "message.ageofminecraft.fusion.state.following": "Your %s is now following"
 }

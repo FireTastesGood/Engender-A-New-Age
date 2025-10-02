@@ -1,8 +1,10 @@
 package net.firetastesgood.ageofminecraft.registry;
 
 import net.firetastesgood.ageofminecraft.EngenderMod;
+import net.firetastesgood.ageofminecraft.fusion.FusionPartItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +31,16 @@ public class ModCreativeTabs {
                         out.accept(ModItems.GOLDEN_CLEAVER.get());
                         out.accept(ModItems.DIAMOND_CLEAVER.get());
                         out.accept(ModItems.NETHERITE_CLEAVER.get());
+
+                        out.accept(FusionPartItem.withData(
+                                new ItemStack(ModItems.FUSION_PART_CHICKEN.get()),
+                                new ResourceLocation(EngenderMod.MODID, "chicken_fusion"),
+                                1,
+                                1,
+                                0
+                        ));
+
+                        out.accept(ModItems.CHICKEN_FUSION.get());
                         out.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ModEnchantments.CRUSHER.get(), 5)));
                         out.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ModEnchantments.DISRUPTION.get(), 5)));
                         out.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ModEnchantments.CONVICTION.get(), 5)));

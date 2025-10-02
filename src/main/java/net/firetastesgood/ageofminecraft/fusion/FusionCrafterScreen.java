@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.ChatFormatting;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +20,11 @@ public class FusionCrafterScreen extends AbstractContainerScreen<FusionCrafterMe
 
     private static final int BG_U = 0, BG_V = 0, BG_W = 176, BG_H = 166;
 
-    private static final int PROG_SRC_U = 176, PROG_SRC_V = 41, PROG_W = 4, PROG_H = 24;
+    private static final int PROG_SRC_U = 176, PROG_SRC_V = 41, PROG_W = 4, PROG_H = 25;
     private static final int MANA_SRC_U = 177, MANA_SRC_V = 1,  MANA_W = 3, MANA_H = 38;
     private static final int ENTR_SRC_U = 182, ENTR_SRC_V = 20, ENTR_W = 3, ENTR_H = 19;
 
-    private static final int PROG_X = 85, PROG_Y = 34;
+    private static final int PROG_X = 84, PROG_Y = 34;
     private static final int MANA_X = 36, MANA_Y = 17;
     private static final int ENTR_X = 45, ENTR_Y = 36;
 

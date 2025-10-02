@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:egg" },
+    { "item": "minecraft:feather" }
+  ],
+  "result": {
+    "item": "ageofminecraft:fusion_part_chicken",
+    "count": 1
+  }
+}

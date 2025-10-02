@@ -1,6 +1,8 @@
 package net.firetastesgood.ageofminecraft.registry;
 
 import net.firetastesgood.ageofminecraft.EngenderMod;
+import net.firetastesgood.ageofminecraft.fusion.FusionItem;
+import net.firetastesgood.ageofminecraft.fusion.FusionPartItem;
 import net.firetastesgood.ageofminecraft.items.*;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.Item;
@@ -65,4 +67,10 @@ public class ModItems {
             ITEMS.register("fusion_crafter",
                     () -> new net.minecraft.world.item.BlockItem(ModBlocks.FUSION_CRAFTER.get(),
                             new net.minecraft.world.item.Item.Properties()));
+
+    public static final RegistryObject<Item> FUSION_PART_CHICKEN = ITEMS.register("fusion_part_chicken",
+            () -> new FusionPartItem(new Item.Properties().stacksTo(16)));
+
+    public static final RegistryObject<Item> CHICKEN_FUSION = ITEMS.register("chicken_fusion",
+            () -> new FusionItem(new Item.Properties().stacksTo(16), () -> ModEntityTypes.CHICKEN_FUSION.get()));
 }

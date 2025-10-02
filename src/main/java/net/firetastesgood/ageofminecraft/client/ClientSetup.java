@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraft.client.renderer.entity.ChickenRenderer;
 
 @Mod.EventBusSubscriber(modid = EngenderMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ClientSetup {
@@ -31,6 +32,8 @@ public final class ClientSetup {
             MenuScreens.register(ModMenus.FUSION_CRAFTER.get(), FusionCrafterScreen::new);
 
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUSION_CRAFTER.get(), RenderType.cutout());
+
+            EntityRenderers.register(ModEntityTypes.CHICKEN_FUSION.get(), ChickenRenderer::new);
         });
     }
 }

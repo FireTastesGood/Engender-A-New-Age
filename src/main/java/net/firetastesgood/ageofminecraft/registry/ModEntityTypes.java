@@ -3,6 +3,7 @@ package net.firetastesgood.ageofminecraft.registry;
 import net.firetastesgood.ageofminecraft.EngenderMod;
 import net.firetastesgood.ageofminecraft.entity.EntropyOrbEntity;
 import net.firetastesgood.ageofminecraft.entity.ManaOrbEntity;
+import net.firetastesgood.ageofminecraft.entity.fusion.FusionChickenEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -29,6 +30,11 @@ public final class ModEntityTypes {
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build(new ResourceLocation(EngenderMod.MODID, "entropy_orb").toString()));
+
+    public static final RegistryObject<EntityType<FusionChickenEntity>> CHICKEN_FUSION =
+            ENTITIES.register("chicken_fusion", () ->
+                    EntityType.Builder.<FusionChickenEntity>of(FusionChickenEntity::new, MobCategory.CREATURE)
+                            .sized(0.4F, 0.7F).build(new ResourceLocation(EngenderMod.MODID, "chicken_fusion").toString()));
 
     private ModEntityTypes() {}
 }

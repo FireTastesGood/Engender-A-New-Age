@@ -14,4 +14,8 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> SLASH_FLESH =
             SOUND_EVENTS.register("slashflesh",
                     () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(EngenderMod.MODID, "slashflesh")));
+
+    public static final RegistryObject<SoundEvent> FUSION_SPAWN =
+            SOUND_EVENTS.register("fusion_spawn",
+                    () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(EngenderMod.MODID, "fusion_spawn")));
 }

@@ -41,6 +41,14 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
         }
     };
 
+    private ItemStack makeOutput(FusionRecipe recipe) {
+        ItemStack out = recipe.getResultItem(level.registryAccess()).copy();
+        if (out.getItem() instanceof FusionItem) {
+            FusionItem.withData(out, recipe.mobId(), recipe.firstSpawnXp(), recipe.attackDamageOverride());
+        }
+        return out;
+    }
+
     public static final int MAX_MANA = 2_000_000;
     public static final int MAX_ENTROPY = 20_000;
 
@@ -179,6 +187,14 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
         if (recipe == null) { resetIfActive(); return; }
 
         if (progress == 0) {
+            if (!hasEnoughForFullCraft(recipe)) {
+                if (manaFrac != 0 || entropyFrac != 0) {
+                    manaFrac = 0;
+                    entropyFrac = 0;
+                    setChanged();
+                }
+                return;
+            }
             lockedRecipe = recipe;
             total = Math.max(1, recipe.duration());
             perTickDen = total;
@@ -187,7 +203,16 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
         }
 
         boolean advanced = consumePerTick(recipe.manaCost(), recipe.entropyCost());
-        if (!advanced) return;
+
+        if (!advanced) {
+            if (progress != 0) {
+                progress = 0;
+                manaFrac = 0;
+                entropyFrac = 0;
+                setChanged();
+            }
+            return;
+        }
 
         progress++;
         if (progress >= total) finishCraft(recipe);
@@ -216,15 +241,20 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
     private void finishCraft(FusionRecipe recipe) {
         items.getItem(0).shrink(1);
 
-        ItemStack out = recipe.getResultItem(level.registryAccess()).copy();
+        ItemStack out = makeOutput(recipe);
         ItemStack cur = items.getItem(2);
+
         if (cur.isEmpty()) {
             items.setItem(2, out);
         } else if (ItemStack.isSameItemSameTags(cur, out)) {
             cur.grow(out.getCount());
         }
 
-        level.playSound(null, worldPosition, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1.0f, 2.0f);
+        if (level != null) {
+            level.playSound(null, worldPosition,
+                    SoundEvents.END_PORTAL_SPAWN,
+                    SoundSource.BLOCKS, 1.0f, 2.0f);
+        }
 
         progress = 0;
         total = 0;
@@ -235,12 +265,19 @@ public class FusionCrafterBlockEntity extends BlockEntity implements MenuProvide
         setChanged();
     }
 
+    private boolean hasEnoughForFullCraft(FusionRecipe recipe) {
+        return this.mana >= recipe.manaCost() && this.entropy >= recipe.entropyCost();
+    }
+
     private boolean hasOutputRoom() {
         ItemStack cur = items.getItem(2);
         if (cur.isEmpty()) return true;
+
         FusionRecipe r = (lockedRecipe != null) ? lockedRecipe : FusionRecipe.find(level, items.getItem(0));
         if (r == null) return false;
-        ItemStack out = r.getResultItem(level.registryAccess()).copy();
+
+        ItemStack out = makeOutput(r);
+
         if (!ItemStack.isSameItemSameTags(cur, out)) return false;
         int result = cur.getCount() + out.getCount();
         return result <= cur.getMaxStackSize();

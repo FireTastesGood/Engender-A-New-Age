@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "ageofminecraft:item/fusion_part_tier1" }
+}
